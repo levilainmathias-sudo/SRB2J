@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,8 +26,6 @@ namespace Scrabble2Joueurs
         public Joueur(string unNom)
         {
             this.nom = unNom;
-            this.totalPoints = 0;
-            this.lesMots = new List<string>();
         }
         #endregion
 
@@ -41,17 +37,17 @@ namespace Scrabble2Joueurs
         /// <param name="unMot">mot proposé par le joueur</param>
         public void AjouterMot(string unMot)
         {
-            this.lesMots.Add(unMot);
-            this.totalPoints += Utilitaire.PointsMot(unMot);
+            this.lesMots = unMot;
         }
 
         /// <summary>
         /// retourne le nombre total de points du joueur
         /// </summary>
         /// <returns>nombre total de points du joueur</returns>
-        public int GetTotalPoints(int totalPoints)
+        public int GetTotalPoints()
         {
-            return totalPoints;
+            
+            return 0;
         }
 
         /// <summary>
@@ -60,6 +56,7 @@ namespace Scrabble2Joueurs
         /// <returns>nombre de mots du joueur</returns>
         public int GetNbMots()
         {
+            //TODO
             return 0;
         }
         /// <summary>
@@ -79,12 +76,7 @@ namespace Scrabble2Joueurs
         /// <returns>mot qui a rapporté le plus grand nombre de points</returns>
         public string MotMeilleur()
         {
-            int maxPts=0;
-            foreach (string mot in this.lesMots)
-            {
-                if (Utilitaire.PointsMot(mot)>maxPts)
-                else;
-            }
+            //TODO
             return "";
         }
         #endregion
