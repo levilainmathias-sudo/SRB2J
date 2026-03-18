@@ -1,0 +1,114 @@
+<Window x:Class="Scrabble2Joueurs.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Scrabble 2 Joueurs" Height="600" Width="900"
+        Background="#F5F5F5">
+
+    <Grid Margin="10">
+
+        <!-- Définition des lignes -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- Header -->
+            <RowDefinition Height="*"/>      <!-- Contenu -->
+            <RowDefinition Height="Auto"/>   <!-- Bas -->
+        </Grid.RowDefinitions>
+
+        <!-- ================= HEADER ================= -->
+        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,10">
+            <TextBlock Text="SCRABBLE 2 JOUEURS"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10" HorizontalAlignment="Center">
+                <TextBox x:Name="Joueur1TextBox" Width="150" Margin="5" PlaceholderText="Joueur 1"/>
+                <TextBox x:Name="Joueur2TextBox" Width="150" Margin="5" PlaceholderText="Joueur 2"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- ================= CONTENU ================= -->
+        <Grid Grid.Row="1" Margin="10">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Lettres proposées -->
+            <StackPanel Grid.Column="0" Margin="10">
+                <TextBlock Text="Proposition de lettres"
+                           FontWeight="Bold"
+                           Margin="0,0,0,10"/>
+
+                <WrapPanel x:Name="LettresPanel" Background="White" Height="100"/>
+            </StackPanel>
+
+            <!-- Zone mots -->
+            <StackPanel Grid.Column="1" Margin="10">
+                <TextBlock Text="Mots des joueurs"
+                           FontWeight="Bold"
+                           Margin="0,0,0,10"/>
+
+                <ListBox x:Name="ListeMots"
+                         Height="200"
+                         Background="White"/>
+            </StackPanel>
+
+            <!-- Scores -->
+            <StackPanel Grid.Column="2" Margin="10">
+                <TextBlock Text="Scores"
+                           FontWeight="Bold"
+                           Margin="0,0,0,10"/>
+
+                <TextBlock Text="Joueur 1 :" FontWeight="Bold"/>
+                <TextBlock x:Name="ScoreJ1" Text="0" FontSize="16" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Joueur 2 :" FontWeight="Bold"/>
+                <TextBlock x:Name="ScoreJ2" Text="0" FontSize="16"/>
+            </StackPanel>
+
+        </Grid>
+
+        <!-- ================= BAS ================= -->
+        <StackPanel Grid.Row="2" Margin="10" HorizontalAlignment="Center">
+
+            <!-- Saisie -->
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <TextBlock Text="Mot :" VerticalAlignment="Center" Margin="5"/>
+                <TextBox x:Name="MotTextBox" Width="200" Margin="5"/>
+            </StackPanel>
+
+            <!-- Bouton -->
+            <Button x:Name="ValiderButton"
+                    Content="Valider"
+                    Width="120"
+                    Height="35"
+                    Margin="5"/>
+
+            <!-- Résultat -->
+            <StackPanel Margin="10">
+                <TextBlock Text="Résultat"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock x:Name="VainqueurText"
+                           Text=""
+                           FontSize="18"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,5"/>
+            </StackPanel>
+
+            <!-- Top mots -->
+            <StackPanel Margin="10">
+                <TextBlock Text="Top 10 mots du meilleur joueur"
+                           FontWeight="Bold"/>
+
+                <ListBox x:Name="TopMotsList" Height="100"/>
+            </StackPanel>
+
+        </StackPanel>
+
+    </Grid>
+</Window>
