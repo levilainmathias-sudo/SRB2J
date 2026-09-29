@@ -1,84 +1,62 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient; 
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace Scrabble2Joueurs
 {
-    /// <summary>
-    /// Classe Joueur
-    /// </summary>
-    public class Joueur
+    public class BddGestion
     {
-        #region attributs privés
-        private string nom;             // nom du joueur 
-        private List<string> lesMots;   // liste des mots proposés par le joueur
-        private int totalPoints;        // nombre total de points du joueur
-        #endregion
+        private string connectionString;
 
-        #region constructeur
-        /// <summary>
-        /// Constructeur de la classe Joueur
-        /// Initialise l'attribut lesMots à une liste vide et l'attribut totalPoints à zéro
-        /// </summary>
-        /// <param name="unNom">nom du joueur</param>
-        public Joueur(string unNom)
+        public BddGestion(string chConnexion)
         {
-            this.nom = unNom;
-        }
-        #endregion
-
-        #region méthodes
-        /// <summary>
-        /// Méthode qui permet d'ajouter un mot à la liste des mots du joueur
-        /// et qui actualise le nombre total de points du joueur
-        /// </summary>
-        /// <param name="unMot">mot proposé par le joueur</param>
-        public void AjouterMot(string unMot)
-        {
-            this.lesMots = unMot;
+            this.connectionString = chConnexion;
         }
 
         /// <summary>
-        /// retourne le nombre total de points du joueur
+        /// Enregistre la partie et les deux joueurs en BDD
         /// </summary>
-        /// <returns>nombre total de points du joueur</returns>
-        public int GetTotalPoints()
+        public void EnregistrerPartie(Joueur j1, Joueur j2)
         {
-            
-            return 0;
-        }
+            string nomGagnant = "Égalité";
+            if (j1.GetTotalPoints() > j2.GetTotalPoints())
+            {
+                nomGagnant = j1.GetNom();
+            }
+            else if (j2.GetTotalPoints() > j1.GetTotalPoints())
+            {
+                nomGagnant = j2.GetNom();
+            }
 
-        /// <summary>
-        /// retourne le nombre de mots du joueur
-        /// </summary>
-        /// <returns>nombre de mots du joueur</returns>
-        public int GetNbMots()
-        {
-            //TODO
-            return 0;
-        }
-        /// <summary>
-        /// retourne la liste des mots du joueur
-        /// </summary>
-        /// <returns>liste de mots du joueur</returns>
-        public List<string> GetLesMots()
-        {
-            //TODO
-            return null;
-        }
+            using (MySqlConnection conn = new MySqlConnection(this.connectionString))
+            {
+                conn.Open();
 
-        /// <summary>
-        /// retourne le mot qui a rapporté le plus grand nombre de points 
-        /// parmi les mots proposés par le joueur
-        /// </summary>
-        /// <returns>mot qui a rapporté le plus grand nombre de points</returns>
-        public string MotMeilleur()
-        {
-            //TODO
-            return "";
+                // 1. Insertion dans 'parties' et récupération de l'ID généré
+                string reqPartie = "INSERT INTO parties (nom_gagnant) VALUES (@gagnant); SELECT LAST_INSERT_ID();";
+                MySqlCommand cmdPartie = new MySqlCommand(reqPartie, conn);
+                cmdPartie.Parameters.AddWithValue("@gagnant", nomGagnant);
+
+                long idPartie = Convert.ToInt64(cmdPartie.ExecuteScalar());
+
+                // 2. Insertion des détails de chaque joueur
+                List<Joueur> lesJoueurs = new List<Joueur> { j1, j2 };
+                foreach (Joueur j in lesJoueurs)
+                {
+                    string reqJoueur = "INSERT INTO partie_joueurs (partie_id, nom_joueur, total_points, nb_mots, meilleur_mot) " +
+                                       "VALUES (@idPartie, @nom, @points, @nbMots, @meilleurMot);";
+
+                    MySqlCommand cmdJoueur = new MySqlCommand(reqJoueur, conn);
+                    cmdJoueur.Parameters.AddWithValue("@idPartie", idPartie);
+                    cmdJoueur.Parameters.AddWithValue("@nom", j.GetNom());
+                    cmdJoueur.Parameters.AddWithValue("@points", j.GetTotalPoints());
+                    cmdJoueur.Parameters.AddWithValue("@nbMots", j.GetNbMots());
+                    cmdJoueur.Parameters.AddWithValue("@meilleurMot", j.MotMeilleur());
+
+                    cmdJoueur.ExecuteNonQuery();
+                }
+            }
         }
-        #endregion
     }
 }
